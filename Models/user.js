@@ -1,4 +1,7 @@
-const bcrypt = require('bcrpyt-nodejs');
+
+const bcrypt = require('./node_modules/bcrpyt-nodejs');
+const mongoose = require('mongoose');
+let Schema = mongoose.Schema;
 
 const UserSchema = new Schema({
     username:{
@@ -30,3 +33,5 @@ UserSchema.pre('save',(next) =>{
         });
     })
 })
+
+mongoose.model('User', UserSchema);
