@@ -17,11 +17,12 @@ router.route('/:taskId').get((req,res) =>{/*tarea de id: */
 });
 router.route('/').post((req, res)=>{ /*nueva tarea*/
     let task = new Task();
-    task.name = req.body.name ;
+    task.name = String(req.body.name );
     task.estimatedTime = Number(req.body.estimatedTime) ;
+    task.owner =String(req.body.owner);
     task.proyect = req.body.proyect ;
     task.status = 'pendiente' ;
-    tasksave( res, task);
+    tasksave( res, task,201);
 
 });
 router.route('/:taskId').put((req, res)=>{ /*modificar tarea*/
@@ -32,7 +33,7 @@ router.route('/:taskId').put((req, res)=>{ /*modificar tarea*/
             task.name = req.body.name;
             task.estimatedTime = Number(req.body.estimatedTime) ;
             task.proyect = req.body.proyect ;
-            tasksave(res, task);
+            tasksave(res, task,200);
 
         })
         .catch(err => res.status(400).json( `Error al borrar en la db ${err}`));
@@ -45,13 +46,15 @@ router.route('/:taskId').delete((req, res)=>{ /*borrar tarea*/
         .catch(err => res.status(400).json( `Error al borrar en la db ${err}`));
 
 });
+
+
 const tasknotfind = (res, taskId, task) =>{
     if(!task) return res.status(404).json( `Error no se contro la tarea con id : ${taskId}`);
 }
 
-function tasksave(res, task){
+function tasksave(res, task, hsc){
     task.save()
-    .then(()   => res.status(200).json(task))
+    .then(()   => res.status(hsc).json(task))
     .catch(err => res.status(400).json( `Error al guardar en la db ${err}`));
 
 }

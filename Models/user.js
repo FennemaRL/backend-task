@@ -1,5 +1,5 @@
 
-const bcrypt = require('./node_modules/bcrpyt-nodejs');
+const Bcrypt = require('bcrypt');
 const mongoose = require('mongoose');
 let Schema = mongoose.Schema;
 
@@ -11,27 +11,25 @@ const UserSchema = new Schema({
         trim: true,
         minlength: 4,
     },
-    password:{
-        type: String,
-        select: false
-    },
+    password:{ type: String }
+    ,
     signupDate:{ type: Date, default: Date.now()}
 });
 
-UserSchema.pre('save',(next) =>{
+UserSchema.pre('save',function(next) {
     let user = this;
     if (!user.isModified('password')) return next();
-
-    bcrypt.genSalt(10,(erro, salt )=>{
-        if(erro) return next();
-
-        bcrypt.hash(user.password, salt, null, (erro, hash)=>{
-            if (error) return next(error);
-            
-            user.password = hash;
-            next();
-        });
-    })
-})
+    try{
+        user.password = Bcrypt.hashSync(user.password,10);
+        next();
+    }catch(err){
+        next(err);
+    }
+        
+    
+});
+UserSchema.statics.findByName = function(name){
+    return this.find({username: new RegExp(name, 'i')});
+}
 
 module.exports = mongoose.model('User', UserSchema);

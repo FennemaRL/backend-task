@@ -26,6 +26,7 @@ const taskRouter = require('./routes/task');
 const userRouter = require('./routes/user');
 
 app.use('/task', taskRouter);
+app.use('/user', userRouter);
 
 app.listen(port, ()=>{
     console.log(`Server is running on port:${port}`);
