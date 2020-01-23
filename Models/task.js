@@ -10,4 +10,4 @@ const taskSchema = new Schema({
     status: { type: String, enum: ['pendiente', 'encurso', 'terminada'] }
 });
 
-module.exports = mongoose.model('Task', taskSchema)
+module.exports = mongoose.model('Task', taskSchema);
