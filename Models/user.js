@@ -1,7 +1,7 @@
 
-const Bcrypt = require('bcrypt');
 const mongoose = require('mongoose');
 let Schema = mongoose.Schema;
+const auth = require('../security/auth');
 
 const UserSchema = new Schema({
     username:{
@@ -20,7 +20,7 @@ UserSchema.pre('save',function(next) {
     let user = this;
     if (!user.isModified('password')) return next();
     try{
-        user.password = Bcrypt.hashSync(user.password,10);
+        user.password = auth.encrypt(user.password);
         next();
     }catch(err){
         next(err);
